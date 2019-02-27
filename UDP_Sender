@@ -1,0 +1,16 @@
+# Importing the socket library for use of sending UDP transmissions
+import socket
+
+# Pre-Defined address and port to send UDP messages
+UDP_IP_Address = "127.0.0.1"
+UDP_Port_Number = 6000
+
+# Ask for a command in the form of user input and convert the string to a bytes type
+UDP_Message = input("Enter a command: ")
+UDP_Message = bytes(UDP_Message.encode())
+
+# Creating a socket object, using AF_INET(IPV4) and SOCK_DGRAM (socket type constant)
+UDP_Socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Send the encoded UDP message to the specified IP and port address
+UDP_Socket.sendto(UDP_Message, (UDP_IP_Address, UDP_Port_Number))
