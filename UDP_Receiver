@@ -2,7 +2,7 @@
 import socket
 
 UDP_IP_Address = "127.0.0.1"    # The address used to receive UDP strings
-UDP_Port_Number = 6000          # The port that will be used to receive UDP strings
+UDP_Port_Number = 8888          # The port that will be used to receive UDP strings
 
 # Defining the dictionary that will house the key/value pairs for the controls
 DirectionDictionary = {"LEFT": "ThingL", "FORWARD": "ThingF", "BACKWARDS": "ThingB", "RIGHT": "ThingR",
