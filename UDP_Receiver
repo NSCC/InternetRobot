@@ -1,0 +1,34 @@
+# Importing the socket library to use for the transmission and receiving of UDP strings
+import socket
+
+UDP_IP_Address = "127.0.0.1"    # The address used to receive UDP strings
+UDP_Port_Number = 6000          # The port that will be used to receive UDP strings
+
+# Defining the dictionary that will house the key/value pairs for the controls
+DirectionDictionary = {"LEFT": "ThingL", "FORWARD": "ThingF", "BACKWARDS": "ThingB", "RIGHT": "ThingR",
+                       "STOP": "ThingS"}
+
+# Creating a socket object, using AF_INET(IPV4) and SOCK_DGRAM (socket type constant)
+UDPSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Binding the socket object to a pre-defined address and port
+UDPSocket.bind((UDP_IP_Address, UDP_Port_Number))
+
+# While true loop to continuously listen for UDP transmissions
+while True:
+    # recvfrom receives a pair of values, string & address, where string is the string representing the data being sent
+    # & address is the address of the socket sending the data
+    # All of the above is preceded by a number of bytes to receive from a transmission
+    # Example = socket.recvfrom(BufferSize[,flags])
+    data, address = UDPSocket.recvfrom(1024)
+    # As long as the transmission isn't empty
+    if data != "":
+        # Create a string from the transmission of type byte and capitalize its letters
+        newData = data.decode().upper()
+        # Check to see if the data string is a valid key in the directional dictionary
+        if newData in DirectionDictionary:
+            # If the string is a valid key, print its value
+            print("Message: ", DirectionDictionary[newData])
+        # If the string isn't a valid key, ignore it
+        else:
+            pass
