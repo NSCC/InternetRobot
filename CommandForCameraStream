@@ -1,0 +1,3 @@
+# Just putting the full command to access the camera feed incase someone forgets or has trouble remembering.
+
+./mjpg_streamer -o "output_http.so -w ./www" -i "input_raspicam.so"
