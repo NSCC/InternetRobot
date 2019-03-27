@@ -1,0 +1,20 @@
+Directory File structure for files used to display camera feed and control servos
+
+Documents
+        |
+        |
+        PanTiltControl2
+                      |
+                      |
+                      camera_pi.py
+                      angleServoControl.py
+                      appCamPanTilt2.py
+                      
+                      templeates
+                                |
+                                |
+                                index.html
+                      static
+                            |
+                            |
+                            style.css
