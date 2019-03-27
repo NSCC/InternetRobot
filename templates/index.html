@@ -1,0 +1,23 @@
+<!--
+  Based on design located on Mjrovai's github located at:
+  https://github.com/Mjrovai/WebCam-Pan-Tilt-Control-via-Flask/blob/master/PanTiltControl2/templates/index.html
+  -->
+<html>
+  <head>
+    <title>CET Robot Stream</title>
+    <link rel="stylesheet" href='../static/style.css'/>
+    <style>
+		body {
+			text-align: center;
+		}
+    </style>
+  </head>
+  <body>
+    <h1>CET Internet Controlled Robot Stream</h1>
+    <h3><img src="{{ url_for('video_feed') }}" width="60%"></h3>
+	<hr>
+	<h4> PAN Angle: <a href="/pan/-"class="button">-</a> [ {{ panServoAngle }} ] <a href="/pan/+"class="button">+</a> </h4>
+	<h4> TILT Angle: <a href="/tilt/-"class="button">-</a> [ {{ tiltServoAngle }} ] <a href="/tilt/+"class="button">+</a> </h4> 
+	<hr>
+  </body>
+</html>
