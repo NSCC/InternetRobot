@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+# This camera object was taken from the github of Mjrovai
+# Link to the github page is: https://github.com/Mjrovai/WebCam-Pan-Tilt-Control-via-Flask
+
+import picamera
+import time
+import io
+import threading
+
+class Camera(object):
+  thread = None   # Thread that reads frames from camera
+  frame = None    # The thread stores the current frame here
+  last_access = 0 # The time of the last access by the client of the camera
+  
+  
+  def initialize(self):
+    if Camera.thread is None:
+      # Start the frame thread
+      Camera.thread = threading.Thread(target=self._thread)
+      Camera.thread.start()
+      
+      # Wait until the frames start to become available
+      while self.frame is None:
+        time.sleep(0)
+  
+  
+  def get_frame(self):
+    Camera.last_access = time.time()
+    self.initialize()
+    return self.frame
+    
+    
+  @classmethod
+  def _thread(cls):
+    with picamera.PiCamera() as camera:
+      # Camera setup
+      camera.resolution = (320, 240)
+      camera.hflip = True
+      camera.vflip = False
+      
+      # Let the camera warm up
+      camera.start_preview()
+      time.sleep(2)
+      
+      stream = io.BytesIO()
+      for foo in camera.capture_continuous(stream, 'jpeg', use_video_port = True):
+        # Store the frame
+        stream.seek(0)
+        cls.frame = stream.read()
+        
+        # Reset the stream for the next frame
+        stream.seek(0)
+        stream.truncate()
+        
+        # If there hasn't been any client activity for the last 10 seconds, stop the thread
+        if time.time() - cls.last_access > 10:
+          break
+    
+    cls.thread = None
