@@ -1,23 +1,34 @@
 import serial
+import subprocess
+import time
 from evdev import InputDevice, categorize, ecodes
 
 
 ser = serial.Serial('/dev/ttyS0',9600,timeout = 1)
-safe_forward = 44
-safe_reverse = 84
-
+safe_forward = 30
+safe_reverse = 98
+directionTurn = 0
 l_stop = 64
 r_stop = 191
 left = l_stop
-leftOld = 0
-rightOld = 0
+leftOld = 64
+rightOld = 191
 change = 0 
 right = r_stop
 ALL_STOP = 0
 fail_safe = "STOP"
 direction = ""
 
-gamepad = InputDevice('/dev/input/event0')
+# checks to see if controller is connected and if it isn't connected it will attempt to connect
+while True:
+	try:
+		gamepad = InputDevice('/dev/input/event0')
+		break
+	except:
+		print("Gamepad not found attempting to connect now")
+		subprocess.call(['./connect.sh'])
+		time.sleep(5)
+# Button values for controller
 aBtn = 304
 bBtn = 305
 xBtn = 307
@@ -64,15 +75,17 @@ def FORWARD():
 	#fucntion to turn left
 def LEFT(direction):
 	global left
+	global right
 	if direction == "f":
-		left = 30
+		left = 20
 		ser.write( bytes([left]) )
 	else:
-		left = 101
+		left = 108
 		ser.write( bytes([left]) )
 	print("M1 = ", left)
+	print("M2 = ", right)
 	return 1
-
+# Once the turn is complete this will return the wheels speed value back to normal
 def LEFTS(leftOld):
 	global left
 	left = leftOld
@@ -80,6 +93,7 @@ def LEFTS(leftOld):
 	
 def RIGHTS(rightOld):
 	global right
+	print("Right Old: " ,rightOld)
 	right = rightOld
 	ser.write( bytes([right]) )
 	
@@ -88,10 +102,10 @@ def RIGHT(direction):
 	#reduce speed of Motor 2
 	global right
 	if direction == "f":
-		right = 145
+		right = 147
 		ser.write( bytes([right]))
 	else:
-		right = 228
+		right = 235
 		ser.write( bytes([right]))
 	print("M2 = ", right)
 	return 1
@@ -103,6 +117,8 @@ def STOP():
 	global right
 	left = l_stop
 	right = r_stop
+	leftOld = l_stop
+	rightOld = r_stop
 	#ser.write( bytes([left]))
 	#ser.write( bytes([right]))
 	ser.write( bytes ([ALL_STOP]))
@@ -177,13 +193,21 @@ while True:
 						if event.value == 0:
 							leftOld = left
 							LEFT(direction)
+							directionTurn = 2
 						if event.value == 128:
-							LEFTS(leftOld)
+							if directionTurn == 2:
+								LEFTS(leftOld)
+								leftOld = l_stop
+								directionTurn = 0
+							
 						if event.value == 255:
 							rightOld = right
 							RIGHT(direction)
+							directionTurn = 1
 						if event.value == 128:
-							RIGHTS(rightOld)
-						
+							if directionTurn == 1:
+								RIGHTS(rightOld)
+								rightOld = r_stop
+								directionTurn = 0
 
 							
