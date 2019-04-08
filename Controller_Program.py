@@ -278,11 +278,15 @@ while True:
 						elif event.code == R2:
 							STOP()
 							direction = ""
+							leftOld = l_stop
+							rightOld = r_stop
 						elif event.code == L1:
 							print("L1 Released")
 						elif event.code == L2:
 							STOP()
 							direction = ""
+							leftOld = l_stop
+							rightOld = r_stop
 							
 		if event.type == ecodes.EV_ABS:
 					# Turning Right
