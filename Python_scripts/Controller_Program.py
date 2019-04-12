@@ -51,7 +51,8 @@ while True:
 		break
 	except:
 		print("Gamepad not found attempting to connect now")
-		subprocess.call(['./connect.sh'])
+		# Change this to match your bluetooth connection script name
+		subprocess.call(['./ControllerConnect.sh'])
 		time.sleep(5)
 # Button values for controller
 aBtn = 304
